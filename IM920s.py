@@ -1,4 +1,5 @@
 import serial
+from serial.tools import list_ports
 
 class IM920s:
     def __init__(self, port:str = '/dev/ttyUSB0', baudrate:int = 19200) -> None:
@@ -50,6 +51,23 @@ class IM920s:
         r = self.write('STNN ' + num)
         self.node_num = self.read_node_num()
         return r
+    
+    @classmethod
+    def search_devices(cls, device_signature:str='10c4:ea60'):
+        '''
+        IDから接続するべきデバイスのポート番号を探す。
+        Parameters
+        ----------
+        device_signature : str
+            ベンダーid:プロダクトidの順に並べた文字列。
+            デフォルトは公式のUSBインターフェースボード（IM920-USB2）
+            https://www.interplan.co.jp/solution/wireless/others/im315usb.php
+        '''
+        ports = list_ports.grep(device_signature)
+        devices = []
+        for p in ports:
+            devices.append(p.device)
+        return devices
     
     def read_node_num(self) -> str:
         r = self.write('RDNN')

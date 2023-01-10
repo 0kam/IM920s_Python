@@ -1,6 +1,9 @@
 from IM920s import IM920s
-im1 = IM920s('/dev/ttyUSB0', 19200)
-im2 = IM920s('/dev/ttyUSB1', 19200)
+
+# 同一PC（Linux）上に2台のIM920sを接続しているとする
+devices = IM920s.search_devices()
+im1 = IM920s(devices[0], 19200)
+im2 = IM920s(devices[1], 19200)
 
 im1.read_all_settings()
 im2.read_all_settings()
